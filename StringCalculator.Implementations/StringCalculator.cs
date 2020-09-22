@@ -6,7 +6,10 @@
     {
         public float Add(string values)
         {
-            throw  new NotImplementedException();
+            if (values == String.Empty)
+                return 0;
+
+            return 0;
         }
     }
 }
