@@ -56,5 +56,25 @@ namespace TDD
 
             result.Should().Be(13);
         }
+
+        [Fact]
+        public void Input_4_dot_1_4_5()
+        {
+            StringCalculator sut = new StringCalculator();
+
+            float result = sut.Add("4.1 4 5");
+
+            result.Should().Be(13.1f);
+        }
+
+        [Fact]
+        public void Input_4_dot_1_4_5_separator()
+        {
+            StringCalculator sut = new StringCalculator();
+
+            float result = sut.Add("4.1,4,5");
+
+            result.Should().Be(13.1f);
+        }
     }
 }

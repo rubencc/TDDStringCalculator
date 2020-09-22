@@ -1,6 +1,7 @@
 ﻿namespace StringCalculator.Implementations
 {
     using System;
+    using System.Globalization;
     using System.Linq;
     using System.Text.RegularExpressions;
 
@@ -12,12 +13,14 @@
             if (String.IsNullOrEmpty(values))
                 return 0;
 
-            var regex = new Regex(@"^[1-9 ]+$");
+            var regex = new Regex(@"^[1-9 .,]+$");
 
             if (!regex.IsMatch(values))
                 return 0;
-            
-            var list = values.Split(' ').Select(float.Parse);
+
+            values = values.Replace(',', ' ');
+
+            var list = values.Split(' ').Select(x => float.Parse(x,  CultureInfo.InvariantCulture));
 
             return list.Sum();
         }
