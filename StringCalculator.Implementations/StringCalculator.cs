@@ -1,28 +1,51 @@
 ﻿namespace StringCalculator.Implementations
 {
     using System;
+    using System.Collections.Generic;
     using System.Globalization;
     using System.Linq;
-    using System.Text.RegularExpressions;
 
     public class StringCalculator
     {
+        private readonly IValidator validator;
+        private readonly IReplacer replacer;
+
+        public StringCalculator(IValidator validator, IReplacer replacer)
+        {
+            this.validator = validator ?? throw new ArgumentNullException(nameof(validator));
+            this.replacer = replacer ?? throw new ArgumentNullException(nameof(replacer));
+        }
 
         public float Add(string values)
         {
-            if (String.IsNullOrEmpty(values))
-                return 0;
+            var numbers = this.GetNumbers(values);
 
-            var regex = new Regex(@"^[-?1-9 .,;\n]+$");
+            return numbers.Sum();
+        }
 
-            if (!regex.IsMatch(values))
-                return 0;
 
-            values = values.Replace( "\r", " ").Replace( "\n", " " ).Replace(',', ' ').Replace(';', ' ');
+        public float Subtract(string values)
+        {
+            var numbers = this.GetNumbers(values);
 
-            var list = values.Split(' ').Select(x => float.Parse(x, CultureInfo.InvariantCulture));
+            float result = numbers.FirstOrDefault();
 
-            return list.Sum();
+            foreach (var item in numbers.Skip(1))
+            {
+                result = result - item;
+            }
+            
+            return result;
+        }
+
+        private IEnumerable<float> GetNumbers(string values)
+        {
+            if (!this.validator.IsValid(values))
+                return new List<float>(){0};
+            
+            string replaced = this.replacer.Replace(values);
+
+            return replaced.Split(' ').Select(x => float.Parse(x, CultureInfo.InvariantCulture));
         }
     }
 }
