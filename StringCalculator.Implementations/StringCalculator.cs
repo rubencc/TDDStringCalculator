@@ -13,14 +13,14 @@
             if (String.IsNullOrEmpty(values))
                 return 0;
 
-            var regex = new Regex(@"^[1-9 .,]+$");
+            var regex = new Regex(@"^[-?1-9 .,;\n]+$");
 
             if (!regex.IsMatch(values))
                 return 0;
 
-            values = values.Replace(',', ' ');
+            values = values.Replace( "\r", " ").Replace( "\n", " " ).Replace(',', ' ').Replace(';', ' ');
 
-            var list = values.Split(' ').Select(x => float.Parse(x,  CultureInfo.InvariantCulture));
+            var list = values.Split(' ').Select(x => float.Parse(x, CultureInfo.InvariantCulture));
 
             return list.Sum();
         }
